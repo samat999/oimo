@@ -17,7 +17,8 @@ import {
 import { MODULES, DEFAULT_ROLES, can as canDo, effectiveAccess, startPath } from './access.mjs'
 
 const app = express()
-const PORT = 4174
+const PORT = Number(process.env.PORT) || 4174
+const distDir = path.resolve(import.meta.dirname, '../web/dist')
 app.use(express.json({ limit: '12mb' }))
 app.use('/uploads', express.static(uploadsDir()))
 
@@ -600,6 +601,17 @@ app.get('/api/owner/export.xlsx', needMod('home'), (req, res) => {
   res.send(buf)
 })
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(distDir))
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return next()
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) return next()
+    res.sendFile(path.join(distDir, 'index.html'), (err) => {
+      if (err) next(err)
+    })
+  })
+}
+
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`OIMO API http://127.0.0.1:${PORT}`)
+  console.log(`OIMO http://127.0.0.1:${PORT}`)
 })

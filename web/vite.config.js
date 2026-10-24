@@ -8,6 +8,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
   plugins: [vue()],
   root: dir,
+  build: { outDir: path.join(dir, 'dist'), emptyOutDir: true },
   server: {
     host: '0.0.0.0',
     port: 5174,

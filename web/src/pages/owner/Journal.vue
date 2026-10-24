@@ -14,7 +14,7 @@
       <button class="btn ghost" @click="clear">Сбросить</button>
     </div>
     <div class="card table-card">
-      <div class="table-scroll">
+      <div class="table-scroll desk-only">
         <table class="table">
           <thead>
             <tr>
@@ -41,6 +41,20 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="mob-only">
+        <button v-for="s in slice" :key="s.id" type="button" class="list-row">
+          <div class="thumb"><img v-if="s.photoUrl" :src="s.photoUrl" alt="" /></div>
+          <div>
+            <b>{{ s.model }}</b>
+            <div class="muted">{{ s.serial }} · {{ when(s.createdAt) }}</div>
+            <div v-if="staff" class="muted">{{ s.sellerName }}</div>
+          </div>
+          <div class="list-side">
+            <div class="sale-sum">{{ som(s.price) }}</div>
+            <span class="pill" :class="s.status">{{ STATUS[s.status] }}</span>
+          </div>
+        </button>
       </div>
       <p v-if="!sales.length" class="muted" style="padding: 8px">Ничего не найдено.</p>
       <Pager v-model:page="page" v-model:size="size" :total="total" :pages="pages" :from="from" :to="to" />

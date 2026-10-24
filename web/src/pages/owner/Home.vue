@@ -2,96 +2,31 @@
   <div class="page">
     <div class="head-row">
       <div class="hello">
-        <h1>{{ d.greeting?.hi }}, {{ first }}!</h1>
+        <h1>{{ d.greeting?.hi }}, {{ first }}</h1>
         <p>{{ d.greeting?.date }} · отчёт {{ d.range?.from }} — {{ d.range?.to }}</p>
       </div>
       <PeriodChips v-model="period" />
     </div>
     <RaceCard :week="d.leaders?.week" :month="d.leaders?.month" />
-    <div class="kpis">
-      <div class="kpi">
-        <div class="label">Подтверждено</div>
-        <b>{{ d.kpis?.sales?.value || 0 }}</b>
-        <div class="delta" :class="d.kpis?.sales?.dir">{{ vs(d.kpis?.sales) }}</div>
-      </div>
-      <div class="kpi">
-        <div class="label">Выручка</div>
-        <b>{{ som(d.kpis?.revenue?.value) }}</b>
-        <div class="delta" :class="d.kpis?.revenue?.dir">{{ vs(d.kpis?.revenue) }}</div>
-      </div>
-      <div class="kpi">
-        <div class="label">На проверке</div>
-        <b>{{ d.kpis?.pending?.value || 0 }}</b>
-        <div class="muted" style="font-size: 12px">ждут решения</div>
-      </div>
-      <div class="kpi">
-        <div class="label">Фонд зарплат</div>
-        <b>{{ som(d.kpis?.payroll?.value) }}</b>
-        <div class="muted" style="font-size: 12px">текущая неделя</div>
-      </div>
-    </div>
-    <div class="card" style="margin-top: 12px">
-      <h3>Воронка продаж</h3>
-      <p class="sub">отчёт → проверка → подтверждение</p>
-      <div class="funnel">
-        <div v-for="f in d.funnel" :key="f.key" class="fl">
-          <span>{{ f.label }}</span>
-          <div class="bar"><i :class="tone(f.key)" :style="{ width: f.pct + '%' }" /></div>
-          <b>{{ f.n }}</b>
-        </div>
-      </div>
-    </div>
-    <div class="card" style="margin-top: 12px">
-      <h3>План / факт магазина</h3>
-      <p class="sub">{{ d.plan?.fact || 0 }} из {{ d.plan?.pieces || 0 }} шт · {{ d.plan?.pct || 0 }}%</p>
-        <ChartBars :rows="d.byDay || []" />
-    </div>
-    <div class="card" style="margin-top: 12px">
-      <h3>KPI менеджеров</h3>
-      <p class="sub">подтверждённые продажи и недельная ставка KPI</p>
-      <table class="table">
-        <thead>
-          <tr><th>Сотрудник</th><th>Факт</th><th>План</th><th>%</th><th>Зарплата</th></tr>
-        </thead>
-        <tbody>
-          <tr v-for="t in d.team" :key="t.userId">
-            <td>{{ t.name }}</td>
-            <td>{{ t.pieces }}</td>
-            <td>{{ t.plan }}</td>
-            <td>
-              <div class="prog"><i :style="{ width: Math.min(t.pct, 100) + '%' }" /></div>
-              {{ t.pct }}%
-            </td>
-            <td>{{ som(t.salary) }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <button class="btn" style="margin-top: 16px; width: auto" @click="xls">Скачать Excel</button>
+    <Insights :d="d" :period="period" mode="owner" />
+    <button class="btn ghost xls" type="button" @click="xls">Скачать Excel за период</button>
   </div>
 </template>
 <script setup>
 import { onMounted, ref, watch } from 'vue'
-import { api, getToken, getUser, som } from '../../api.js'
+import { api, getToken, getUser } from '../../api.js'
 import PeriodChips from '../../components/PeriodChips.vue'
-import ChartBars from '../../components/ChartBars.vue'
 import RaceCard from '../../components/RaceCard.vue'
+import Insights from '../../components/Insights.vue'
 const user = getUser()
 const first = user?.name?.split(' ')[0] || ''
 const period = ref('week')
-const d = ref({ funnel: [], byDay: [], team: [] })
+const d = ref({ funnel: [], byDay: [], team: [], kpis: {}, plan: {}, greeting: {}, range: {} })
 async function load() {
   d.value = await api('/api/owner/overview?period=' + period.value)
 }
 onMounted(load)
 watch(period, load)
-function vs(x) {
-  if (!x || x.dir === 'flat') return '0% к пред. периоду'
-  return (x.dir === 'up' ? '+' : '−') + x.pct + '% к пред. периоду'
-}
-function tone(key) {
-  return { pending: 'w', confirmed: 'g', rejected: 'r' }[key] || ''
-}
 async function xls() {
   const blob = await fetch('/api/owner/export.xlsx', { headers: { Authorization: 'Bearer ' + getToken() } }).then((r) => r.blob())
   const a = document.createElement('a')
