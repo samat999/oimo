@@ -1,22 +1,18 @@
 <template>
   <div class="login">
-    <form class="box" @submit.prevent="go">
+    <form class="box" autocomplete="off" @submit.prevent="go">
       <div class="logo">OIM<span>O</span></div>
       <h1>Авторизация</h1>
       <div class="field">
         <label>Логин</label>
-        <input v-model="login" autocomplete="username" />
+        <input v-model="login" name="login" autocomplete="off" autocapitalize="off" spellcheck="false" />
       </div>
       <div class="field">
         <label>Пароль</label>
-        <input v-model="password" type="password" autocomplete="current-password" />
+        <input v-model="password" name="password" type="password" autocomplete="new-password" />
       </div>
       <p v-if="err" class="err">{{ err }}</p>
       <button class="btn" :disabled="busy">Войти</button>
-      <p class="muted" style="margin-top: 16px; font-size: 13px; text-align: center">
-        Владелец: owner / Owner123<br />
-        Продавец: aibek или alina / Seller123
-      </p>
     </form>
   </div>
 </template>
@@ -25,8 +21,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { api, setAuth } from '../api.js'
 const router = useRouter()
-const login = ref('aibek')
-const password = ref('Seller123')
+const login = ref('')
+const password = ref('')
 const err = ref('')
 const busy = ref(false)
 async function go() {

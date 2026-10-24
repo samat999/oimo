@@ -927,18 +927,27 @@ select {
     width: 100%;
     max-width: 100%;
     margin: 12px 0 0;
+    display: flex;
+  }
+  .period button {
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+  .period.wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
-  .period button {
+  .period.wrap button {
     white-space: normal;
     line-height: 1.25;
-    padding: 10px 8px;
-    font-size: 13px;
   }
   .head-row { display: block; }
   .head-btn { width: 100%; margin-top: 12px; }
-  .kpi b { font-size: 20px; overflow-wrap: anywhere; }
+  .kpi b { font-size: 22px; white-space: nowrap; }
+  .kpi .delta, .kpi .tiny { line-height: 1.35; overflow-wrap: anywhere; }
   .page { padding-bottom: calc(108px + var(--safe)); }
   .desk-only { display: none; }
   .mob-only { display: block; }

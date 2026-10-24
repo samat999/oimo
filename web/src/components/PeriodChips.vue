@@ -1,5 +1,5 @@
 <template>
-  <div class="period">
+  <div class="period" :class="{ wrap: long }">
     <button v-for="p in list" :key="p.id" :class="{ on: modelValue === p.id }" @click="$emit('update:modelValue', p.id)">
       {{ p.label }}
     </button>
@@ -21,4 +21,5 @@ const list = computed(
       { id: 'year', label: 'Год' },
     ],
 )
+const long = computed(() => list.value.some((p) => String(p.label).length > 8))
 </script>

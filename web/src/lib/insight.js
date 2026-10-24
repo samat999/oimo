@@ -60,6 +60,8 @@ export function insight(d, period) {
   const rejected = funnel.find((f) => f.key === 'rejected')?.n || 0
   const conversion = reports ? Math.round((confirmed / reports) * 100) : 0
   const avgCheck = confirmed ? Math.round(Number(revenue.value || 0) / confirmed) : 0
+  const prevSales = Number(sales.prev || 0)
+  const prevAvg = prevSales ? Math.round(Number(revenue.prev || 0) / prevSales) : 0
   const best = [...(d.byDay || [])].sort((a, b) => (b.count || 0) - (a.count || 0))[0]
   return {
     periodLabel: PERIOD[period] || 'Неделя',
@@ -74,5 +76,7 @@ export function insight(d, period) {
     best: best && best.count ? best : null,
     salesVs: vsHuman(sales, 'шт', period),
     revenueVs: vsHuman(revenue, 'сом', period),
+    avgVs: vsHuman({ value: avgCheck, prev: prevAvg }, 'сом', period),
+    avgDir: avgCheck > prevAvg ? 'up' : avgCheck < prevAvg ? 'down' : 'flat',
   }
 }

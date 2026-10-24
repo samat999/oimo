@@ -5,7 +5,7 @@
         <h1>Проверка отчётов</h1>
         <p>{{ nNew }} новых · {{ all.length }} всего. Новые сверху, решение сразу входит в KPI.</p>
       </div>
-      <div class="period">
+      <div class="period wrap">
         <button type="button" :class="{ on: tab === 'pending' }" @click="setTab('pending')">Новые</button>
         <button type="button" :class="{ on: tab === 'all' }" @click="setTab('all')">Все</button>
         <button type="button" :class="{ on: tab === 'confirmed' }" @click="setTab('confirmed')">Подтверждённые</button>

@@ -15,7 +15,7 @@
       <div class="kpi">
         <div class="label">Средний чек</div>
         <b>{{ som(i.avgCheck) }}</b>
-        <div class="muted tiny">только подтверждённые</div>
+        <div class="delta" :class="i.avgDir">{{ i.avgVs }}</div>
       </div>
       <div class="kpi">
         <div class="label">{{ payLabel }}</div>
@@ -90,8 +90,8 @@ const sales = computed(() => props.d.kpis?.sales?.value || 0)
 const payValue = computed(() => props.mode === 'seller' ? props.d.kpis?.salary?.value : props.d.kpis?.payroll?.value)
 const payLabel = computed(() => props.mode === 'seller' ? 'Зарплата недели' : 'Фонд зарплат')
 const payHint = computed(() => {
-  if (props.mode === 'seller') return `бонус ${som(props.d.kpis?.salary?.bonus || 0)} · считает только неделя`
-  return 'текущая неделя по KPI'
+  if (props.mode === 'seller') return `бонус ${som(props.d.kpis?.salary?.bonus || 0)} за эту неделю`
+  return 'за эту неделю по таблице KPI'
 })
 const planLine = computed(() => {
   const fact = props.d.plan?.fact || 0
