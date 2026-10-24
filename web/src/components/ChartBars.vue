@@ -1,6 +1,6 @@
 <template>
   <div class="chart-wrap">
-    <div class="chart" :style="{ gridTemplateColumns: 'repeat(' + (rows.length || 1) + ', 1fr)' }">
+    <div class="chart" :style="{ gridTemplateColumns: 'repeat(' + (rows.length || 1) + ', minmax(0, 1fr))' }">
       <div v-for="x in rows" :key="x.date" class="col" :class="{ pick: pick?.date === x.date }" tabindex="0" @click="pick = x">
         <div class="tip">
           <b>{{ title(x) }}</b>
@@ -11,7 +11,7 @@
         <i class="fact" :style="{ height: h(x.count) }" />
       </div>
     </div>
-    <div class="axis" :style="{ gridTemplateColumns: 'repeat(' + (rows.length || 1) + ', 1fr)' }">
+    <div class="axis" :style="{ gridTemplateColumns: 'repeat(' + (rows.length || 1) + ', minmax(0, 1fr))' }">
       <span v-for="x in rows" :key="'a' + x.date">{{ x.label }}</span>
     </div>
     <div v-if="pick" class="chart-note">

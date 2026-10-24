@@ -371,13 +371,16 @@ select {
   gap: 8px;
   align-items: end;
   height: 140px;
+  width: 100%;
+  min-width: 0;
   grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  grid-auto-columns: minmax(0, 1fr);
 }
-.col { display: flex; gap: 3px; align-items: end; height: 100%; justify-content: center; }
+.col { display: flex; gap: 3px; align-items: end; height: 100%; justify-content: center; min-width: 0; }
 .col i {
   display: block;
   width: 10px;
+  max-width: 45%;
   border-radius: 6px 6px 3px 3px;
   min-height: 4px;
 }
@@ -418,8 +421,16 @@ select {
 }
 .dyn-cell { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; align-items: center; }
 .dyn-cell b { font-size: 13px; font-weight: 700; }
-.table.dyn td, .table.dyn th { white-space: nowrap; }
+.dyn-cell .prog { min-width: 0; }
 .table.dyn td:last-child { width: 46%; }
+.dyn-list { display: none; }
+.dyn-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.dyn-row:last-child { border-bottom: 0; }
+.dyn-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 6px; }
+.dyn-head span { min-width: 0; }
+.dyn-head b { font-size: 14px; white-space: nowrap; }
+.dyn-head small { font-weight: 500; color: var(--muted); }
+.dyn-row .prog { min-width: 0; width: 100%; height: 10px; }
 .chart-wrap { position: relative; min-width: 0; }
 .chart-wrap .axis {
   display: grid;
@@ -956,6 +967,7 @@ select {
   .desk-only { display: none; }
   .mob-only { display: block; }
   .review-list.mob-only { display: grid; }
+  .dyn-list.mob-only { display: grid; }
   .filters { display: grid; grid-template-columns: 1fr; }
   .filters input, .filters .sel, .filters .btn { width: 100%; min-width: 0; flex: none; }
   .split { grid-template-columns: 1fr; }

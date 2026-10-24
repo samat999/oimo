@@ -9,8 +9,17 @@
         <b class="big-pct">{{ d.plan?.pct || 0 }}%</b>
       </div>
       <div class="prog fat"><i :style="{ width: Math.min(d.plan?.pct || 0, 100) + '%' }" /></div>
-      <ChartBars :rows="rows" />
-      <div class="table-scroll">
+      <ChartBars class="desk-only" :rows="rows" />
+      <div class="dyn-list mob-only">
+        <div v-for="x in rows" :key="'m-' + x.date" class="dyn-row">
+          <div class="dyn-head">
+            <span>{{ rowTitle(x) }}</span>
+            <b>{{ x.count || 0 }} <small>из {{ x.plan || 0 }}</small></b>
+          </div>
+          <div class="prog"><i :style="{ width: factWidth(x) }" /></div>
+        </div>
+      </div>
+      <div class="table-scroll desk-only">
         <table class="table dyn">
           <thead>
             <tr>
