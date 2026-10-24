@@ -5,14 +5,25 @@
         <h1>Сотрудники</h1>
         <p>{{ users.length }} продавцов · блокировка сразу закрывает вход</p>
       </div>
-      <button class="btn" style="width: auto" @click="open = true">+ Сотрудник</button>
+      <button class="btn head-btn" @click="open = true">+ Сотрудник</button>
     </div>
     <div class="filters">
       <input v-model="q" placeholder="Имя или логин" />
       <Select v-model="state" :options="stateOpts" />
     </div>
     <div class="card table-card">
-      <div class="table-scroll">
+      <div class="mob-only">
+        <button v-for="u in slice" :key="'m-' + u.id" type="button" class="list-row plain" @click="$router.push('/owner/team/' + u.id)">
+          <div>
+            <b>{{ u.name }}</b>
+            <div class="muted">{{ u.login }} · {{ ROLE_NAME[u.role] || u.role }}</div>
+          </div>
+          <div class="list-side">
+            <span class="pill" :class="u.active ? 'confirmed' : 'rejected'">{{ u.active ? 'Активен' : 'Блок' }}</span>
+          </div>
+        </button>
+      </div>
+      <div class="table-scroll desk-only">
         <table class="table">
           <thead>
             <tr>

@@ -13,7 +13,44 @@
       </div>
     </div>
     <div class="card table-card">
-      <div class="table-scroll">
+      <div class="mob-only review-list">
+        <article v-for="s in slice" :key="'m-' + s.id" class="review-card">
+          <button class="thumb" type="button" @click="look = s">
+            <img v-if="s.photoUrl" :src="s.photoUrl" alt="" />
+          </button>
+          <div class="review-main">
+            <div class="review-top">
+              <div>
+                <b>{{ s.model }}</b>
+                <div class="muted">{{ s.serial }}</div>
+                <div class="muted">{{ s.sellerName }} · {{ when(s.createdAt) }}</div>
+              </div>
+              <div class="list-side">
+                <div class="sale-sum">{{ som(s.price) }}</div>
+                <span class="pill" :class="s.status">{{ STATUS_REVIEW[s.status] }}</span>
+              </div>
+            </div>
+            <p v-if="s.comment" class="muted review-note">{{ s.comment }}</p>
+            <p v-if="s.rejectReason" class="err">{{ s.rejectReason }}</p>
+            <template v-if="s.status === 'pending'">
+              <div class="check-actions" v-if="!ask[s.id]">
+                <button class="btn ok" type="button" @click.stop="decide(s, 'confirmed')">Подтвердить</button>
+                <button class="btn bad" type="button" @click.stop="askReject(s)">Отклонить</button>
+              </div>
+              <div class="check-reject" v-else>
+                <label>Причина отклонения</label>
+                <Select grow v-model="reason[s.id]" placeholder="Выберите причину" :options="rejectOpts" />
+                <div class="check-actions">
+                  <button class="btn bad" type="button" @click="decide(s, 'rejected')">Отклонить</button>
+                  <button class="btn ghost" type="button" @click="ask[s.id] = false">Назад</button>
+                </div>
+              </div>
+              <p v-if="err[s.id]" class="err">{{ err[s.id] }}</p>
+            </template>
+          </div>
+        </article>
+      </div>
+      <div class="table-scroll desk-only">
         <table class="table">
           <thead>
             <tr>

@@ -9,6 +9,7 @@
     </div>
     <RaceCard :week="leaders.week" :month="leaders.month" />
     <div class="card">
+      <div class="table-scroll">
       <table class="table">
         <thead>
           <tr><th>Место</th><th>Сотрудник</th><th>Факт</th><th>План</th></tr>
@@ -25,6 +26,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
       <Pager v-model:page="page" v-model:size="size" :total="total" :pages="pages" :from="from" :to="to" />
     </div>
   </div>

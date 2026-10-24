@@ -11,7 +11,16 @@
       Зарплата считается только за календарную неделю, пн–вс. Ставка выбранного диапазона идёт на все подтверждённые продажи недели, плюс бонус.
     </div>
     <div class="card table-card">
-      <div class="table-scroll">
+      <div class="mob-only kpi-cards">
+        <div v-for="(r, i) in kpi" :key="'m-' + i" class="kpi-range">
+          <div class="field"><label>От, шт</label><input class="cell" type="number" v-model.number="r.min" /></div>
+          <div class="field"><label>До, шт</label><input class="cell" type="number" v-model.number="r.max" /></div>
+          <div class="field"><label>Ставка</label><input class="cell" type="number" v-model.number="r.rate" /></div>
+          <div class="field"><label>Бонус</label><input class="cell" type="number" v-model.number="r.bonus" /></div>
+          <p class="muted">{{ example(r) }}</p>
+        </div>
+      </div>
+      <div class="table-scroll desk-only">
         <table class="table">
           <thead>
             <tr>

@@ -5,8 +5,8 @@
       <p>Роль задаёт базовые права. У сотрудника можно включить или выключить модуль отдельно.</p>
     </div>
     <div class="filters">
-      <button class="btn" :class="tab === 'roles' ? '' : 'ghost'" style="width: auto" @click="tab = 'roles'">Роли</button>
-      <button class="btn" :class="tab === 'people' ? '' : 'ghost'" style="width: auto" @click="tab = 'people'">Сотрудники</button>
+      <button class="btn" :class="tab === 'roles' ? '' : 'ghost'" @click="tab = 'roles'">Роли</button>
+      <button class="btn" :class="tab === 'people' ? '' : 'ghost'" @click="tab = 'people'">Сотрудники</button>
     </div>
     <div v-if="tab === 'roles'" class="card">
       <h3>{{ ROLE_NAME[role] }}</h3>
@@ -15,7 +15,7 @@
         <Select v-model="role" :options="roleOpts" />
       </div>
       <AccessGrid v-if="roles[role]" v-model="roles[role]" :modules="modules" :locked="role === 'owner'" />
-      <button class="btn" style="margin-top: 12px; width: auto" :disabled="role === 'owner'" @click="saveRoles">Сохранить роль</button>
+      <button class="btn head-btn" style="margin-top: 12px" :disabled="role === 'owner'" @click="saveRoles">Сохранить роль</button>
       <p v-if="msg" class="muted">{{ msg }}</p>
     </div>
     <div v-else class="card">
