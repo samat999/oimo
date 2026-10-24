@@ -1,5 +1,40 @@
 <template>
   <div class="insights">
+    <div class="card">
+      <div class="card-top">
+        <div>
+          <h3>Динамика</h3>
+          <p class="sub">{{ planLine }}</p>
+        </div>
+        <b class="big-pct">{{ d.plan?.pct || 0 }}%</b>
+      </div>
+      <div class="prog fat"><i :style="{ width: Math.min(d.plan?.pct || 0, 100) + '%' }" /></div>
+      <ChartBars :rows="rows" />
+      <div class="table-scroll">
+        <table class="table dyn">
+          <thead>
+            <tr>
+              <th>{{ colName }}</th>
+              <th>План</th>
+              <th>Факт</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="x in rows" :key="x.date">
+              <td>{{ rowTitle(x) }}</td>
+              <td>{{ x.plan || 0 }}</td>
+              <td>
+                <div class="dyn-cell">
+                  <b>{{ x.count || 0 }}</b>
+                  <div class="prog"><i :style="{ width: factWidth(x) }" /></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p v-if="!rows.length" class="muted">За этот период ещё нет дней.</p>
+    </div>
     <p class="story">{{ story }}</p>
     <div class="kpis">
       <div class="kpi">
@@ -22,19 +57,6 @@
         <b>{{ som(payValue) }}</b>
         <div class="muted tiny">{{ payHint }}</div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-top">
-        <div>
-          <h3>План магазина</h3>
-          <p class="sub">{{ planLine }}</p>
-        </div>
-        <b class="big-pct">{{ d.plan?.pct || 0 }}%</b>
-      </div>
-      <div class="prog fat"><i :style="{ width: Math.min(d.plan?.pct || 0, 100) + '%' }" /></div>
-      <p class="muted tiny" style="margin: 10px 0 0">Синие столбцы — факт. Светлые — дневная норма плана. Нажмите день, чтобы увидеть цифры.</p>
-      <ChartBars :rows="d.byDay || []" />
     </div>
 
     <div class="card">
@@ -76,6 +98,7 @@
 import { computed } from 'vue'
 import { som } from '../api.js'
 import { insight, pcs, periodNow } from '../lib/insight.js'
+import { dayTitle } from '../lib/labels.js'
 import ChartBars from './ChartBars.vue'
 
 const props = defineProps({
@@ -85,7 +108,21 @@ const props = defineProps({
   mineId: { type: String, default: '' },
 })
 
+const MONTHS = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 const i = computed(() => insight(props.d, props.period))
+const rows = computed(() => props.d.byDay || [])
+const colName = computed(() => (props.period === 'year' ? 'Месяц' : 'День'))
+function rowTitle(x) {
+  const s = String(x.date || '')
+  if (s.length >= 10) return dayTitle(s)
+  const n = Number(s)
+  if (n >= 1 && n <= 12) return MONTHS[n - 1]
+  return x.label || s
+}
+function factWidth(x) {
+  const max = Math.max(1, ...rows.value.map((r) => Math.max(Number(r.count) || 0, Number(r.plan) || 0)))
+  return Math.round(((Number(x.count) || 0) / max) * 100) + '%'
+}
 const sales = computed(() => props.d.kpis?.sales?.value || 0)
 const payValue = computed(() => props.mode === 'seller' ? props.d.kpis?.salary?.value : props.d.kpis?.payroll?.value)
 const payLabel = computed(() => props.mode === 'seller' ? 'Зарплата недели' : 'Фонд зарплат')

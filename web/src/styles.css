@@ -416,7 +416,11 @@ select {
   border-radius: 14px;
   background: var(--bg);
 }
-.chart-wrap { position: relative; }
+.dyn-cell { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; align-items: center; }
+.dyn-cell b { font-size: 13px; font-weight: 700; }
+.table.dyn td, .table.dyn th { white-space: nowrap; }
+.table.dyn td:last-child { width: 46%; }
+.chart-wrap { position: relative; min-width: 0; }
 .chart-wrap .axis {
   display: grid;
   gap: 8px;
