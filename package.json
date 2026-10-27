@@ -2,23 +2,47 @@
   "name": "oimo-sales",
   "version": "1.0.0",
   "private": true,
+  "description": "OIMO Technology: учёт продаж ноутбуков, проверка владельцем, планы и KPI-начисления команды.",
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13.0"
   },
+  "type": "module",
   "scripts": {
-    "dev": "concurrently -n api,web -c cyan,magenta \"node server/index.mjs\" \"vite --config web/vite.config.js\"",
-    "build": "vite build --config web/vite.config.js",
-    "start": "node server/index.mjs"
+    "setup": "tsx scripts/setup.ts",
+    "migrate": "node scripts/migrate.mjs",
+    "dev": "next dev --hostname 127.0.0.1 --port 5188",
+    "build": "next build --webpack && node scripts/postbuild.mjs",
+    "start": "node scripts/start.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "node --experimental-strip-types --test tests/domain.test.mjs",
+    "test:integration": "node --experimental-strip-types tests/integration.mjs",
+    "test:isolated": "node tests/run-isolated.mjs",
+    "admin:reset-password": "node scripts/admin-reset-password.mjs",
+    "backup": "node scripts/backup.mjs",
+    "demo:owner": "node scripts/demo-owner.mjs",
+    "lan": "node scripts/lan.mjs",
+    "test:e2e": "node tests/e2e-ui.mjs"
   },
   "dependencies": {
-    "express": "^5.1.0",
-    "xlsx": "^0.18.5"
+    "better-auth": "1.7.12",
+    "better-sqlite3": "13.0.3",
+    "dotenv": "18.0.9",
+    "lucide-react": "1.31.0",
+    "next": "16.4.3",
+    "nodemailer": "10.2.1",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.4",
-    "concurrently": "^9.1.2",
-    "vite": "^6.3.5",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.1"
+    "@types/better-sqlite3": "9.6.0",
+    "@types/node": "22.19.19",
+    "@types/nodemailer": "8.0.2",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.4.3",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
   }
 }

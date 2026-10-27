@@ -1,0 +1,15 @@
+.git
+node_modules
+.next
+data
+outputs
+.env*
+!.env.example
+*.tsbuildinfo
+tests/sample.xlsx
+CLAUDE_*.md
+Dockerfile
+compose.yaml
+.dockerignore
+backups
+DEMO_CREDENTIALS.txt

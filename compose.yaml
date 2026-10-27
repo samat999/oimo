@@ -1,0 +1,16 @@
+# Local/office run: `node scripts/docker-env.mjs && docker compose up -d --build`, then open the BETTER_AUTH_URL from .env.docker.
+services:
+  oimo:
+    build: .
+    image: oimo-sales:local
+    restart: unless-stopped
+    env_file:
+      - path: .env.docker
+        required: true
+    ports:
+      # Only this computer can connect by default. See README → «Доступ с телефонов в магазине» before widening this.
+      - "127.0.0.1:${OIMO_PORT:-5190}:5188"
+    volumes:
+      - oimo-data:/data
+volumes:
+  oimo-data:
